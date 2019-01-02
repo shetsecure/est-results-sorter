@@ -5,8 +5,8 @@
 import re
 import operator
 
-filename = 'INF1-S1-M1.csv'
-#filename = raw_input('Enter the filename: ')
+#filename = 'INF1-S1-M1.csv'
+filename = raw_input('Enter the filename: ')
 module_name = [ line for line in open(filename, 'r') if 'Elément pédagogique' in line]
 if (len(module_name) > 0):
 	print(module_name[0])
