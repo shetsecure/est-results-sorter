@@ -24,19 +24,19 @@ def menu():
 	return choice
 
 def sortByGrades(path):
-	module_name = [ line for line in open(filename, 'r') if 'Elément pédagogique' in line]
+	module_name = [ line for line in open(path, 'r') if 'Elément pédagogique' in line]
 	if (len(module_name) > 0):
 		print(module_name[0])
-	num_lines = sum(1 for line in open(filename))
+	num_lines = sum(1 for line in open(path))
 
 	# getting number of subjects in the module
-	ff = open(filename, 'r')
+	ff = open(path, 'r')
 	all_text = ''.join(ff.readlines())
 	num_u_p = int(all_text.count("CNE")) # number of CNE in the file = number of pages. It's used to calculate the
 										 # number of subjects properly
 	num_subj = int(all_text.count("Ado / 20")/num_u_p) - 1 # number of subjects -> will be used to solve the name problem
 
-	f = open(filename, 'r') # to get all text after CNE line (the beginning of the students list)
+	f = open(path, 'r') # to get all text after CNE line (the beginning of the students list)
 	for i in range(1,num_lines):
 		if(f.readline().find("CNE") >= 0):
 			res = f.readlines()
@@ -85,14 +85,26 @@ def sortByGrades(path):
 		print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in resultList[i]]))
 
 
-
-choice = menu()
-
-if choice == 1:
-	filename = raw_input('Enter the filename: ')
-	if os.path.exists(filename):
-		sortByGrades(filename)
+def sortAndMerge(files):
+	if isinstance(files, list) and files:
+		if len(files) == 1:
+			sortByGrades(files[0])
+		else:
+			print("work is here")
 	else:
-		print("File Not Found")
+		print("no")
+
+
+sortAndMerge(["info.csv"])
+
+# choice = menu()
+
+# if choice == 1:
+# 	filename = raw_input('Enter the filename: ')
+# 	if os.path.exists(filename):
+# 		sortByGrades(filename)
+# 	else:
+# 		print("File Not Found")
+
 #filename = raw_input('Enter the filename: ')
 #sortByGrades(filename)
