@@ -23,7 +23,7 @@ def menu():
 
 	return choice
 
-def extractStudentsList(path, sortAlpha = False):
+def extractStudentsList(path, sortByCne = False):
 	module_name = [ line for line in open(path, 'r') if 'Elément pédagogique' in line]
 	if (len(module_name) > 0):
 		print(module_name[0])
@@ -65,6 +65,7 @@ def extractStudentsList(path, sortAlpha = False):
 			if(l):
 				if re.match(r"^(([A-Z]|[0-9])[0-9]{9})$", l[0]):
 					k += 1
+					ll.append(l[0])
 					for i in range(3, len(l)-num_subj):
 						ll.append(l[i])
 					resultList.append(ll)
@@ -79,18 +80,20 @@ def extractStudentsList(path, sortAlpha = False):
 		except IndexError:
 			break
 
-	if sortAlpha: # sorting alphabetically, most likely will be used in merging results
+	if sortByCne: # sorting alphabetically, most likely will be used in merging results
 		resultList.sort(key = lambda x : x[0])
 
 	return resultList
 
 def sortByGrades(path):
-	resultList = extractStudentsList(path)
+	resultList = extractStudentsList(path, True)
 	n = int(len(resultList))
 	resultList.sort(key = lambda x : float(x[len(x)-2]), reverse=True)
 
 	for i in range(0,n):
-		print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in resultList[i]]))
+		iterS = iter(resultList[i])
+		next(iterS) # don't display CNE
+		print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in iterS]))
 
 
 def sortAndMerge(files):
@@ -100,17 +103,17 @@ def sortAndMerge(files):
 			sortByGrades(files[0])
 		else:
 			n -= 1
-
+			all = [] # the list
 			#for i in range(0,n):
 	else:
 		print("no")
 
 
-#sortAndMerge(["info.csv"])
-resultList = extractStudentsList("info.csv", True)
-n = int(len(resultList))
-for i in range(0,n):
-	print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in resultList[i]]))
+sortAndMerge(["info.csv"])
+# resultList = extractStudentsList("info.csv", True)
+# n = int(len(resultList))
+# for i in range(0,n):
+# 	print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in resultList[i]]))
 # choice = menu()
 
 # if choice == 1:
