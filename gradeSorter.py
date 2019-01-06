@@ -23,7 +23,7 @@ def menu():
 
 	return choice
 
-def extractStudentsList(path):
+def extractStudentsList(path, sortAlpha = False):
 	module_name = [ line for line in open(path, 'r') if 'Elément pédagogique' in line]
 	if (len(module_name) > 0):
 		print(module_name[0])
@@ -79,6 +79,9 @@ def extractStudentsList(path):
 		except IndexError:
 			break
 
+	if sortAlpha: # sorting alphabetically, most likely will be used in merging results
+		resultList.sort(key = lambda x : x[0])
+
 	return resultList
 
 def sortByGrades(path):
@@ -92,17 +95,22 @@ def sortByGrades(path):
 
 def sortAndMerge(files):
 	if isinstance(files, list) and files:
-		if len(files) == 1:
+		n = int(len(files))
+		if n == 1:
 			sortByGrades(files[0])
-		#else:
-			# sort by name
-			# merge and sort
+		else:
+			n -= 1
+
+			#for i in range(0,n):
 	else:
 		print("no")
 
 
-sortAndMerge(["info.csv"])
-
+#sortAndMerge(["info.csv"])
+resultList = extractStudentsList("info.csv", True)
+n = int(len(resultList))
+for i in range(0,n):
+	print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in resultList[i]]))
 # choice = menu()
 
 # if choice == 1:
