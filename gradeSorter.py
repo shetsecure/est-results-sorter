@@ -23,7 +23,7 @@ def menu():
 
 	return choice
 
-def sortByGrades(path):
+def extractStudentsList(path):
 	module_name = [ line for line in open(path, 'r') if 'Elément pédagogique' in line]
 	if (len(module_name) > 0):
 		print(module_name[0])
@@ -79,6 +79,11 @@ def sortByGrades(path):
 		except IndexError:
 			break
 
+	return resultList
+
+def sortByGrades(path):
+	resultList = extractStudentsList(path)
+	n = int(len(resultList))
 	resultList.sort(key = lambda x : float(x[len(x)-2]), reverse=True)
 
 	for i in range(0,n):
@@ -89,8 +94,9 @@ def sortAndMerge(files):
 	if isinstance(files, list) and files:
 		if len(files) == 1:
 			sortByGrades(files[0])
-		else:
-			print("work is here")
+		#else:
+			# sort by name
+			# merge and sort
 	else:
 		print("no")
 
