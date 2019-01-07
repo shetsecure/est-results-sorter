@@ -120,29 +120,26 @@ def sortAndMerge(files):
 				AllCNEList.append(tempL)
 				CneList = [k for k in CneList if k in tempL]
 
-			# parsing all files
-			# for i in range(0,n):
-			# 	if os.path.exists(files[i]): # better check
-			# 		AllCNEList.append(extractStudentsList(files[i], True, True)) # append gives weird results
+			# Now CneList contains all the commun students between all the files
 
 			for file in files:
 				if os.path.exists(file):
-					All.append(sortByGrades(file, False))
+					All.append(extractStudentsList(file, True)) # sorting by CNE to optimize search time in the search loop below
+
 			# All[i][j][k] -> i: the sorted list of file[i], j: the student in the list[i], k: the CNE of the student j in the list[i]
 
-			# print(AllCNEList[0])
+			all_len = len(All) # same for AllCNEList
 
-			# all_len = len(All) # same for AllCNEList
-			# # print(AllCNEList[0])
-			# for cne in CneList:
-			# 	commun = True
-			# 	for i in range(0, all_len):
-			# 		if cne not in AllCNEList[i]):
-			# 			commun = False
-			#
-			# 	if commun:
-			#
-			# Now CneList contains all the commun students between all the files
+			for cne in CneList:
+				commun = True
+				for i in range(0, all_len):
+					if cne not in AllCNEList[i]):
+						commun = False
+						break
+
+				if commun:
+
+
 			# iterate over CneList, check if each field exist in all lists (files)
 			# if so: compute the average (don't foget to cast to float)
 			# add the student in a new list
