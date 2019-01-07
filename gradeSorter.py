@@ -126,20 +126,41 @@ def sortAndMerge(files):
 				if os.path.exists(file):
 					All.append(extractStudentsList(file, True)) # sorting by CNE to optimize search time in the search loop below
 
-			# All[i][j][k] -> i: the sorted list of file[i], j: the student in the list[i], k: the CNE of the student j in the list[i]
-
+			# All[i][j][k] -> i: the sorted list of file[i], j: the student in the list[i], k=0: the CNE of the student j in the list[i]
+			#print(All[0])
 			all_len = len(All) # same for AllCNEList
+			index = 0 # index to keep track of listOfResults
 
 			for cne in CneList:
 				commun = True
 				for i in range(0, all_len):
-					if cne not in AllCNEList[i]):
+					if cne not in AllCNEList[i]:
 						commun = False
 						break
 
 				if commun:
+					avg = float(0)
+					for i in range(0, all_len):
+						sub_len = len(All[i])
+						ii = i
+						for j in range(0, sub_len):
+							if cne[0] == All[i][j][0]:
+								jj = j
+								avg += float(All[i][j][len(All[i][j])-2])
+								break
+
+					listOfResults.append(All[ii][jj]) # adding student's results to the list, the grade will be edited below with avg
+					avg /= all_len
+					listOfResults[index][len(listOfResults[index])-2] = float("{0:.3f}".format(avg)) # editing the grade with the avg of grades
+					index += 1 # next student
 
 
+			n = int(len(listOfResults))
+			listOfResults.sort(key = lambda x : float(x[len(x)-2]), reverse=True)
+			for i in range(0,n):
+				iterS = iter(listOfResults[i])
+				next(iterS) # don't display CNE
+				print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in iterS]))
 			# iterate over CneList, check if each field exist in all lists (files)
 			# if so: compute the average (don't foget to cast to float)
 			# add the student in a new list
