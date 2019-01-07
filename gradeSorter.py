@@ -1,7 +1,6 @@
 # - *- coding: utf- 8 - *-
 import re
 import os.path
-from bisect import bisect_left
 
 def menu():
 	print("ESTF results Sorter")
@@ -89,20 +88,18 @@ def extractStudentsList(path, sortByCne = False, onlyCNE = False):
 
 	return resultList
 
-def sortByGrades(path):
+def sortByGrades(path, display = True):
 	resultList = extractStudentsList(path, True)
 	n = int(len(resultList))
 	resultList.sort(key = lambda x : float(x[len(x)-2]), reverse=True)
 
-	for i in range(0,n):
-		iterS = iter(resultList[i])
-		next(iterS) # don't display CNE
-		print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in iterS]))
-
-def binary_search(a, x, lo=0, hi=None):  # can't use a to specify default for hi
-    hi = hi if hi is not None else len(a)  # hi defaults to len(a)
-    pos = bisect_left(a, x, lo, hi)  # find insertion position
-    return (pos if pos != hi and a[pos] == x else -1)  # don't walk off the end
+	if display:
+		for i in range(0,n):
+			iterS = iter(resultList[i])
+			next(iterS) # don't display CNE
+			print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in iterS]))
+	else:
+		return resultList
 
 def sortAndMerge(files):
 	if isinstance(files, list) and files:
@@ -111,15 +108,42 @@ def sortAndMerge(files):
 			sortByGrades(files[0])
 		else:
 			listOfResults = []
+			All = []
+			AllCNEList = []
+
 			CneList = extractStudentsList(files[0], True, True) # get only CNEs, this will be the final list of CNE that contains the intersection of all lists of students
+			AllCNEList.append(CneList)
 			#listOfResults = extractStudentsList(files[0], True)
 
 			for i in range(1, n):
 				tempL = extractStudentsList(files[i], True, True) # get the next list and do the intersection
+				AllCNEList.append(tempL)
 				CneList = [k for k in CneList if k in tempL]
 
+			# parsing all files
+			# for i in range(0,n):
+			# 	if os.path.exists(files[i]): # better check
+			# 		AllCNEList.append(extractStudentsList(files[i], True, True)) # append gives weird results
+
+			for file in files:
+				if os.path.exists(file):
+					All.append(sortByGrades(file, False))
+			# All[i][j][k] -> i: the sorted list of file[i], j: the student in the list[i], k: the CNE of the student j in the list[i]
+
+			# print(AllCNEList[0])
+
+			# all_len = len(All) # same for AllCNEList
+			# # print(AllCNEList[0])
+			# for cne in CneList:
+			# 	commun = True
+			# 	for i in range(0, all_len):
+			# 		if cne not in AllCNEList[i]):
+			# 			commun = False
+			#
+			# 	if commun:
+			#
 			# Now CneList contains all the commun students between all the files
-			# iterate over CneList, check if each field exist in all lists (files), you need to create a list to check
+			# iterate over CneList, check if each field exist in all lists (files)
 			# if so: compute the average (don't foget to cast to float)
 			# add the student in a new list
 			# return
@@ -127,10 +151,10 @@ def sortAndMerge(files):
 		print("no")
 
 
-#sortAndMerge(["info1.csv", "info2.csv", "info3.csv"])
-resultList = extractStudentsList("info3.csv", True)
+sortAndMerge(["info1.csv", "info2.csv", "info3.csv"])
+#resultList = extractStudentsList("info3.csv", True)
 #for i in range(0, len(resultList)):
-print(resultList[0][0])
+#print(resultList[0][0])
 # n = int(len(resultList))
 # for i in range(0,n):
 # 	print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in resultList[i]]))
