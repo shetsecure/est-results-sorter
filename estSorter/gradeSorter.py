@@ -3,7 +3,7 @@ import re
 import os.path
 
 def extractStudentsList(path, sortByCne = False, onlyCNE = False):
-	module_name = [ line for line in open(path, 'r') if 'Elément pédagogique' in line]
+	#module_name = [ line for line in open(path, 'r') if 'Elément pédagogique' in line]
 	#if (len(module_name) > 0):
 		#print(module_name[0])
 	num_lines = sum(1 for line in open(path))
