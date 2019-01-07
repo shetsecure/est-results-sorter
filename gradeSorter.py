@@ -26,8 +26,8 @@ def menu():
 
 def extractStudentsList(path, sortByCne = False, onlyCNE = False):
 	module_name = [ line for line in open(path, 'r') if 'Elément pédagogique' in line]
-	if (len(module_name) > 0):
-		print(module_name[0])
+	#if (len(module_name) > 0):
+		#print(module_name[0])
 	num_lines = sum(1 for line in open(path))
 
 	# getting number of subjects in the module
@@ -110,8 +110,7 @@ def sortAndMerge(files):
 		if n == 1:
 			sortByGrades(files[0])
 		else:
-			n -= 1
-			listOfResults = CneList = []
+			listOfResults = []
 			CneList = extractStudentsList(files[0], True, True) # get only CNEs, this will be the final list of CNE that contains the intersection of all lists of students
 			#listOfResults = extractStudentsList(files[0], True)
 
@@ -120,18 +119,18 @@ def sortAndMerge(files):
 				CneList = [k for k in CneList if k in tempL]
 
 			# Now CneList contains all the commun students between all the files
-
-			
-			# grabe the list of CNE sorted for the 1st file, and keep playing with the same var for the others
-			# each iteration, delete the not found students -> getting slowly the intersection of all files
-			# once you have the commun students of all files, construct the list computing the average of each one
-			# sort the last list and display the results
+			# iterate over CneList, check if each field exist in all lists (files), you need to create a list to check
+			# if so: compute the average (don't foget to cast to float)
+			# add the student in a new list
+			# return
 	else:
 		print("no")
 
 
-sortAndMerge(["info2.csv", "info.csv"])
-# resultList = extractStudentsList("info.csv", True)
+#sortAndMerge(["info1.csv", "info2.csv", "info3.csv"])
+resultList = extractStudentsList("info3.csv", True)
+#for i in range(0, len(resultList)):
+print(resultList[0][0])
 # n = int(len(resultList))
 # for i in range(0,n):
 # 	print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in resultList[i]]))
