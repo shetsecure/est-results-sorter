@@ -2,27 +2,6 @@
 import re
 import os.path
 
-def menu():
-	print("ESTF results Sorter")
-	print("What you want to do ?")
-	print("[1] : Sort one CSV file")
-	print("[2] : Sort multiple CSV files and merge the results")
-
-
-	good = 0
-
-	while not good:
-		try:
-			choice = int(raw_input("Your choice: "))
-			if choice == 1 or choice == 2:
-				good = 1
-			else:
-				print("Please choose 1 or 2")
-		except ValueError, e:
-			print ("%s is not a valid integer." % e.args[0].split(": ")[1])
-
-	return choice
-
 def extractStudentsList(path, sortByCne = False, onlyCNE = False):
 	module_name = [ line for line in open(path, 'r') if 'Elément pédagogique' in line]
 	#if (len(module_name) > 0):
@@ -101,7 +80,7 @@ def sortByGrades(path, display = True):
 	else:
 		return resultList
 
-def mergeAndSort(files):
+def mergeAndSort(files, display = True):
 	if isinstance(files, list) and files:
 		n = int(len(files))
 		if n == 1:
@@ -160,6 +139,64 @@ def mergeAndSort(files):
 			n = int(len(listOfResults))
 			listOfResults.sort(key = lambda x : float(x[len(x)-2]), reverse=True)
 
-			return listOfResults
+			if display:
+				for i in range(0,n):
+					iterS = iter(listOfResults[i])
+					next(iterS) # don't display CNE
+					print(str(i+1).zfill(2) + ': ' + ' '.join([str(x) for x in iterS]))
+			else:
+				return listOfResults
 	else:
 		print("Something weird happened")
+
+def menu():
+	print("ESTF results Sorter")
+	print("What you want to do ?")
+	print("[1] : Sort one CSV file")
+	print("[2] : Merge multiple CSV files and sort the result")
+
+	good = 0
+
+	while not good:
+		try:
+			choice = int(raw_input("Your choice: "))
+			if choice == 1 or choice == 2:
+				good = 1
+			else:
+				print("Please choose 1 or 2")
+		except ValueError, e:
+			print ("%s is not a valid integer." % e.args[0].split(": ")[1])
+
+	if choice == 1:
+		print("[!] WARNING: if the file is not withing the same directory of this script, please give the full path")
+		file_path = raw_input("Enter the filename: ")
+		if os.path.isfile(file_path):
+			sortByGrades(file_path)
+		else:
+			print("File not Found !")
+	else:
+		files = []
+		good = 0
+
+		while not good:
+			try:
+				h_many = int(raw_input("How many files ?: "))
+
+				if h_many > 0:
+					good = 1
+				else:
+					print("Please enter a positive int")
+			except ValueError, e:
+				print ("%s is not a valid integer." % e.args[0].split(": ")[1])
+
+		for i in range(0, h_many):
+			f = raw_input("Name of the " + str(i+1) + " file: ")
+			if os.path.isfile(f):
+				if f.lower().endswith('.csv'):
+					files.append(f)
+				else:
+					print("[!] WARNING: File extension is not supported !")
+
+		print("Sorted list based on the " + str(h_many) + " files given: ")
+		print('')
+		mergeAndSort(files)
