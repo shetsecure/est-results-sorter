@@ -1,6 +1,7 @@
 # EST results Sorter
 
-A python script that takes the csv file that was converted from pdf grades results, and gives you the list of student sorted by their grade.
+A python script that sorts the list of students based on their grades from the csv file that was converted from pdf grades results.
+This script support multiple files processing, merging files and give you the result in one list.
 
 <h1>How to Use</h1>
 
@@ -12,4 +13,5 @@ A python script that takes the csv file that was converted from pdf grades resul
 </ol>
 
 <h2>Demo:</h2>
-<img src=" Screenshot at 2019-01-03 00-38-22.png " />
+<img src="screen1.png" />
+<img src="screen2.png" />
