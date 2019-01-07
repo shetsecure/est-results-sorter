@@ -13,5 +13,5 @@ This script support multiple files processing, merging files and give you the re
 </ol>
 
 <h2>Demo:</h2>
-<img src="screen1.png" />
-<img src="screen2.png" />
+<img src="screenshots/screen1.png" />
+<img src="screenshots/screen2.png" />
